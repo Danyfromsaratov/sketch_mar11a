@@ -32,6 +32,7 @@ unsigned long interval5 = 100;
 String stroka;
 char words[10];
 int pin;
+int a;
 unsigned long newinterval;
 void setup() {
   // set the digital pin as output:
@@ -42,49 +43,71 @@ void setup() {
   pinMode(Pin4, OUTPUT);
   pinMode(Pin5, OUTPUT);
 }
+
+
+
 void SerialEvent()
 {
-  stroka = Serial.read();
-  stroka=stroka.toInt();
-  stroka=stroka-48;
-  Serial.print(stroka);
-  stroka.toCharArray(words, 10);
-  pin = atoi(strtok(words, "="));
-  //newinterval = strtok(NULL, "=");
+  int i = 0;
+  char buffer[100];
+  if (Serial.available()) {
+    delay(100);
+    //загоняем прочитанное в буфер
+    while ( Serial.available() && i < 99) {
+      buffer[i++] = Serial.read();
+    }
+    //закрываем массив
+    buffer[i++] = '\0';
+  }
+  if (i > 0) {
+    pin = atoi(strtok(buffer, "="));
+    newinterval = atoi(strtok(NULL, "="));
+    Serial.print("\n");
+    Serial.print(pin);
+     Serial.print(" = ");
+    Serial.print(newinterval);
+  }
 
-  
 
-  if (pin == '1') {
-    digitalWrite(13, 1);
+
+ 
+
+  if (pin == 1) {
+    //digitalWrite(13, 1);
     // block = true;
     interval1 = newinterval;
+    loop();
   }
-  if (pin == '2') {
-    digitalWrite(12, 1);
+  if (pin == 2) {
+    //digitalWrite(12, 1);
     // block = true;
     interval2 = newinterval;
+    loop();
   }
-  if (pin == '3') {
-    digitalWrite(11, 1);
+  if (pin == 3) {
+    //digitalWrite(11, 1);
     // block = true;
     interval3 = newinterval;
+    loop();
   }
-  if (pin == '4') {
-    digitalWrite(10, 1);
+  if (pin == 4) {
+    //digitalWrite(10, 1);
     // block = true;
     interval4 = newinterval;
+    loop();
   }
-  if (pin == '5') {
-    digitalWrite(9, 1);
+  if (pin == 5) {
+    //digitalWrite(9, 1);
     // block = true;
     interval5 = newinterval;
+    loop();
   }
 }
 void loop() {
 
   unsigned long currentMillis = millis();
-  unsigned long currentMillis2 = millis();
-  currentMillis2 = currentMillis2 * 0.001;
+  unsigned long currentMillis2 = micros();
+  
   if (currentMillis - previousMillis1 >= interval1) {
     // save the last time you blinked the LED
     previousMillis1 = currentMillis2;
